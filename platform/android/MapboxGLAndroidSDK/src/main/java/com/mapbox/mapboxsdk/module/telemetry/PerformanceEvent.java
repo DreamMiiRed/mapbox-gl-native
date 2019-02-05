@@ -14,7 +14,7 @@ import java.util.Locale;
  * Customer measurements can be added to the bundle.
  */
 public class PerformanceEvent extends Event {
-  private static final String PERFORMANCE_TRACE = "performance.trace";
+  private static final String PERFORMANCE_TRACE = "mobile.performance_trace";
 
   private final String event;
 
