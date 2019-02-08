@@ -1,7 +1,7 @@
 #pragma once
 
 #include <mbgl/gl/extension.hpp>
-#include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/gl_defines.hpp>
 
 namespace mbgl {
 namespace gl {

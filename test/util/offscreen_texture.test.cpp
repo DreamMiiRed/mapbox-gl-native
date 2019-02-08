@@ -1,6 +1,6 @@
 #include <mbgl/test/util.hpp>
 
-#include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/gl/context.hpp>
 #include <mbgl/gl/headless_backend.hpp>
 #include <mbgl/renderer/backend_scope.hpp>
@@ -9,7 +9,10 @@
 
 using namespace mbgl;
 
-TEST(OffscreenTexture, EmptyRed) {
+class OffscreenTextureTest : public ::testing::Test, protected mbgl::gl::GLFunctions {
+};
+
+TEST_F(OffscreenTextureTest, EmptyRed) {
     HeadlessBackend backend({ 512, 256 });
     BackendScope scope { backend };
 
@@ -26,7 +29,7 @@ TEST(OffscreenTexture, EmptyRed) {
     test::checkImage("test/fixtures/offscreen_texture/empty-red", image, 0, 0);
 }
 
-struct Shader {
+struct Shader : private mbgl::gl::GLFunctions {
     Shader(const GLchar* vertex, const GLchar* fragment) {
         program = MBGL_CHECK_ERROR(glCreateProgram());
         vertexShader = MBGL_CHECK_ERROR(glCreateShader(GL_VERTEX_SHADER));
@@ -55,7 +58,7 @@ struct Shader {
     GLuint a_pos = 0;
 };
 
-struct Buffer {
+struct Buffer : private mbgl::gl::GLFunctions {
     Buffer(std::vector<GLfloat> data) {
         MBGL_CHECK_ERROR(glGenBuffers(1, &buffer));
         MBGL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, buffer));
@@ -71,7 +74,7 @@ struct Buffer {
 };
 
 
-TEST(OffscreenTexture, RenderToTexture) {
+TEST_F(OffscreenTextureTest, RenderToTexture) {
     HeadlessBackend backend({ 512, 256 });
     BackendScope scope { backend };
     auto& context = backend.getContext();

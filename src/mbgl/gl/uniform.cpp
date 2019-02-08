@@ -1,5 +1,5 @@
 #include <mbgl/gl/uniform.hpp>
-#include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/util/color.hpp>
 #include <mbgl/util/size.hpp>
 #include <mbgl/util/convert.hpp>
@@ -10,47 +10,47 @@ namespace mbgl {
 namespace gl {
 
 UniformLocation uniformLocation(ProgramID id, const char* name) {
-    return MBGL_CHECK_ERROR(glGetUniformLocation(id, name));
+    return MBGL_CHECK_ERROR(GLFunctions::glGetUniformLocation(id, name));
 }
 
 template <>
 void bindUniform<float>(UniformLocation location, const float& t) {
-    MBGL_CHECK_ERROR(glUniform1f(location, t));
+    MBGL_CHECK_ERROR(GLFunctions::glUniform1f(location, t));
 }
 
 template <>
 void bindUniform<int32_t>(UniformLocation location, const int32_t& t) {
-    MBGL_CHECK_ERROR(glUniform1i(location, t));
+    MBGL_CHECK_ERROR(GLFunctions::glUniform1i(location, t));
 }
 
 template <>
 void bindUniform<std::array<float, 2>>(UniformLocation location, const std::array<float, 2>& t) {
-    MBGL_CHECK_ERROR(glUniform2fv(location, 1, t.data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniform2fv(location, 1, t.data()));
 }
 
 template <>
 void bindUniform<std::array<float, 3>>(UniformLocation location, const std::array<float, 3>& t) {
-    MBGL_CHECK_ERROR(glUniform3fv(location, 1, t.data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniform3fv(location, 1, t.data()));
 }
 
 template <>
 void bindUniform<std::array<float, 4>>(UniformLocation location, const std::array<float, 4>& t) {
-    MBGL_CHECK_ERROR(glUniform4fv(location, 1, t.data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniform4fv(location, 1, t.data()));
 }
 
 template <>
 void bindUniform<std::array<double, 4>>(UniformLocation location, const std::array<double, 4>& t) {
-    MBGL_CHECK_ERROR(glUniformMatrix2fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniformMatrix2fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
 }
 
 template <>
 void bindUniform<std::array<double, 9>>(UniformLocation location, const std::array<double, 9>& t) {
-    MBGL_CHECK_ERROR(glUniformMatrix3fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniformMatrix3fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
 }
 
 template <>
 void bindUniform<std::array<double, 16>>(UniformLocation location, const std::array<double, 16>& t) {
-    MBGL_CHECK_ERROR(glUniformMatrix4fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
+    MBGL_CHECK_ERROR(GLFunctions::glUniformMatrix4fv(location, 1, GL_FALSE, util::convert<float>(t).data()));
 }
 
 
@@ -93,16 +93,15 @@ ActiveUniforms activeUniforms(ProgramID id) {
 
     GLint count;
     GLint maxLength;
-    MBGL_CHECK_ERROR(glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count));
-    MBGL_CHECK_ERROR(glGetProgramiv(id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength));
+    MBGL_CHECK_ERROR(GLFunctions::glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count));
+    MBGL_CHECK_ERROR(GLFunctions::glGetProgramiv(id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength));
 
     auto name = std::make_unique<GLchar[]>(maxLength);
     GLsizei length;
     GLint size;
     GLenum type;
     for (GLint index = 0; index < count; index++) {
-        MBGL_CHECK_ERROR(
-            glGetActiveUniform(id, index, maxLength, &length, &size, &type, name.get()));
+        MBGL_CHECK_ERROR(GLFunctions::glGetActiveUniform(id, index, maxLength, &length, &size, &type, name.get()));
         active.emplace(
             std::string{ name.get(), static_cast<size_t>(length) },
             ActiveUniform{ static_cast<size_t>(size), static_cast<UniformDataType>(type) });

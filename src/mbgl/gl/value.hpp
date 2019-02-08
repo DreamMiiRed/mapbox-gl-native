@@ -2,6 +2,7 @@
 
 #include <mbgl/gl/types.hpp>
 #include <mbgl/gl/depth_mode.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/gl/stencil_mode.hpp>
 #include <mbgl/gl/color_mode.hpp>
 #include <mbgl/gl/cull_face_mode.hpp>
@@ -17,49 +18,49 @@ class Context;
 
 namespace value {
 
-struct ClearDepth {
+struct ClearDepth : private GLFunctions {
     using Type = float;
     static const constexpr Type Default = 1;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct ClearColor {
+struct ClearColor : private GLFunctions {
     using Type = Color;
     static const Type Default;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct ClearStencil {
+struct ClearStencil : private GLFunctions {
     using Type = int32_t;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct StencilMask {
+struct StencilMask : private GLFunctions {
     using Type = uint32_t;
     static const constexpr Type Default = ~0u;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct DepthMask {
+struct DepthMask : private GLFunctions {
     using Type = bool;
     static const constexpr Type Default = true;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct ColorMask {
+struct ColorMask : private GLFunctions {
     using Type = ColorMode::Mask;
     static const constexpr Type Default = { true, true, true, true };
     static void Set(const Type&);
     static Type Get();
 };
 
-struct StencilFunc {
+struct StencilFunc : private GLFunctions {
     struct Type {
         uint32_t func;
         int32_t ref;
@@ -74,14 +75,14 @@ constexpr bool operator!=(const StencilFunc::Type& a, const StencilFunc::Type& b
     return a.func != b.func || a.ref != b.ref || a.mask != b.mask;
 }
 
-struct StencilTest {
+struct StencilTest : private GLFunctions {
     using Type = bool;
     static const constexpr Type Default = false;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct StencilOp {
+struct StencilOp : private GLFunctions {
     struct Type {
         StencilMode::Op sfail;
         StencilMode::Op dpfail;
@@ -96,42 +97,42 @@ constexpr bool operator!=(const StencilOp::Type& a, const StencilOp::Type& b) {
     return a.sfail != b.sfail || a.dpfail != b.dpfail || a.dppass != b.dppass;
 }
 
-struct DepthRange {
+struct DepthRange : private GLFunctions {
     using Type = Range<float>;
     static const constexpr Type Default = { 0, 1 };
     static void Set(const Type&);
     static Type Get();
 };
 
-struct DepthTest {
+struct DepthTest : private GLFunctions {
     using Type = bool;
     static const constexpr Type Default = false;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct DepthFunc {
+struct DepthFunc : private GLFunctions {
     using Type = DepthMode::Function;
     static const constexpr Type Default = DepthMode::Less;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct Blend {
+struct Blend : private GLFunctions {
     using Type = bool;
     static const constexpr Type Default = true;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BlendEquation {
+struct BlendEquation : private GLFunctions {
     using Type = ColorMode::BlendEquation;
     static const constexpr Type Default = ColorMode::BlendEquation::Add;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BlendFunc {
+struct BlendFunc : private GLFunctions {
     struct Type {
         ColorMode::BlendFactor sfactor;
         ColorMode::BlendFactor dfactor;
@@ -145,35 +146,35 @@ constexpr bool operator!=(const BlendFunc::Type& a, const BlendFunc::Type& b) {
     return a.sfactor != b.sfactor || a.dfactor != b.dfactor;
 }
 
-struct BlendColor {
+struct BlendColor : private GLFunctions {
     using Type = Color;
     static const Type Default;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct Program {
+struct Program : private GLFunctions {
     using Type = gl::ProgramID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct LineWidth {
+struct LineWidth : private GLFunctions {
     using Type = float;
     static const constexpr Type Default = 1;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct ActiveTextureUnit {
+struct ActiveTextureUnit : private GLFunctions {
     using Type = TextureUnit;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct Viewport {
+struct Viewport : private GLFunctions {
     struct Type {
         int32_t x;
         int32_t y;
@@ -184,7 +185,7 @@ struct Viewport {
     static Type Get();
 };
 
-struct ScissorTest {
+struct ScissorTest : private GLFunctions {
     using Type = bool;
     static const constexpr Type Default = false;
     static void Set(const Type&);
@@ -199,83 +200,83 @@ constexpr bool operator==(const Viewport::Type& a, const Viewport::Type& b) {
     return !(a != b);
 }
 
-struct BindFramebuffer {
+struct BindFramebuffer : private GLFunctions {
     using Type = FramebufferID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BindRenderbuffer {
+struct BindRenderbuffer : private GLFunctions {
     using Type = RenderbufferID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct CullFace {
+struct CullFace : private GLFunctions {
     using Type = CullFaceMode::CullFace;
     static const constexpr Type Default = CullFaceMode::Disable;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct CullFaceSide {
+struct CullFaceSide : private GLFunctions {
     using Type = CullFaceMode::CullFaceSide;
     static const constexpr Type Default = CullFaceMode::Back;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct FrontFace {
+struct FrontFace : private GLFunctions {
     using Type = CullFaceMode::FrontFace;
     static const constexpr Type Default = CullFaceMode::CounterClockwise;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BindTexture {
+struct BindTexture : private GLFunctions {
     using Type = gl::TextureID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BindVertexBuffer {
+struct BindVertexBuffer : private GLFunctions {
     using Type = gl::BufferID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BindElementBuffer {
+struct BindElementBuffer : private GLFunctions {
     using Type = gl::BufferID;
     static const constexpr Type Default = 0;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct BindVertexArray {
+struct BindVertexArray : private GLFunctions {
     using Type = gl::VertexArrayID;
     static const constexpr Type Default = 0;
     static void Set(const Type&, const Context&);
     static Type Get(const Context&);
 };
 
-struct VertexAttribute {
+struct VertexAttribute : private GLFunctions {
     using Type = optional<gl::AttributeBinding>;
     static const Type Default;
     static void Set(const Type&, Context&, AttributeLocation);
 };
 
-struct PixelStorePack {
+struct PixelStorePack : private GLFunctions {
     using Type = PixelStorageType;
     static const constexpr Type Default = { 4 };
     static void Set(const Type&);
     static Type Get();
 };
 
-struct PixelStoreUnpack {
+struct PixelStoreUnpack : private GLFunctions {
     using Type = PixelStorageType;
     static const constexpr Type Default = { 4 };
     static void Set(const Type&);
@@ -284,14 +285,14 @@ struct PixelStoreUnpack {
 
 #if not MBGL_USE_GLES2
 
-struct PointSize {
+struct PointSize : private GLFunctions {
     using Type = float;
     static const constexpr Type Default = 1;
     static void Set(const Type&);
     static Type Get();
 };
 
-struct PixelZoom {
+struct PixelZoom : private GLFunctions {
     struct Type {
         float xfactor;
         float yfactor;
@@ -305,7 +306,7 @@ constexpr bool operator!=(const PixelZoom::Type& a, const PixelZoom::Type& b) {
     return a.xfactor != b.xfactor || a.yfactor != b.yfactor;
 }
 
-struct RasterPos {
+struct RasterPos : private GLFunctions {
     struct Type {
         double x;
         double y;
@@ -321,7 +322,7 @@ constexpr bool operator!=(const RasterPos::Type& a, const RasterPos::Type& b) {
     return a.x != b.x || a.y != b.y || a.z != b.z || a.w != b.w;
 }
 
-struct PixelTransferDepth {
+struct PixelTransferDepth : private GLFunctions {
     struct Type {
         float scale;
         float bias;
@@ -335,7 +336,7 @@ constexpr bool operator!=(const PixelTransferDepth::Type& a, const PixelTransfer
     return a.scale != b.scale || a.bias != b.bias;
 }
 
-struct PixelTransferStencil {
+struct PixelTransferStencil : private GLFunctions {
     struct Type {
         int32_t shift;
         int32_t offset;

@@ -1,6 +1,6 @@
 #include <mbgl/test/util.hpp>
 
-#include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/gl/context.hpp>
 #include <mbgl/map/map.hpp>
 #include <mbgl/util/default_thread_pool.hpp>
@@ -36,7 +36,7 @@ void main() {
 }
 )MBGL_SHADER";
 
-struct Shader {
+struct Shader : private mbgl::gl::GLFunctions {
     Shader(const GLchar* vertex, const GLchar* fragment) {
         program = MBGL_CHECK_ERROR(glCreateProgram());
         vertexShader = MBGL_CHECK_ERROR(glCreateShader(GL_VERTEX_SHADER));
@@ -65,7 +65,7 @@ struct Shader {
     GLuint a_pos = 0;
 };
 
-struct Buffer {
+struct Buffer : private mbgl::gl::GLFunctions {
     Buffer(std::vector<GLfloat> data) {
         MBGL_CHECK_ERROR(glGenBuffers(1, &buffer));
         MBGL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, buffer));
@@ -80,7 +80,10 @@ struct Buffer {
     GLuint buffer = 0;
 };
 
-TEST(GLContextMode, Shared) {
+class GLContextModeTest : public ::testing::Test, protected mbgl::gl::GLFunctions {
+};
+
+TEST_F(GLContextModeTest, Shared) {
     util::RunLoop loop;
 
     DefaultFileSource fileSource(":memory:", "test/fixtures/api/assets");

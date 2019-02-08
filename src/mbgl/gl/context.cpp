@@ -1,5 +1,4 @@
 #include <mbgl/gl/context.hpp>
-#include <mbgl/gl/gl.hpp>
 #include <mbgl/gl/debugging_extension.hpp>
 #include <mbgl/gl/vertex_array_extension.hpp>
 #include <mbgl/gl/program_binary_extension.hpp>
@@ -427,7 +426,7 @@ void Context::drawPixels(const Size size, const void* data, TextureFormat format
 namespace {
 
 void checkFramebuffer() {
-    GLenum status = MBGL_CHECK_ERROR(glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    GLenum status = MBGL_CHECK_ERROR(GLFunctions::glCheckFramebufferStatus(GL_FRAMEBUFFER));
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         switch (status) {
         case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -458,12 +457,12 @@ void checkFramebuffer() {
 void bindDepthStencilRenderbuffer(
     const Renderbuffer<RenderbufferType::DepthStencil>& depthStencil) {
 #ifdef GL_DEPTH_STENCIL_ATTACHMENT
-    MBGL_CHECK_ERROR(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+    MBGL_CHECK_ERROR(GLFunctions::glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                                                GL_RENDERBUFFER, depthStencil.renderbuffer));
 #else
-    MBGL_CHECK_ERROR(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+    MBGL_CHECK_ERROR(GLFunctions::glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
                                                depthStencil.renderbuffer));
-    MBGL_CHECK_ERROR(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+    MBGL_CHECK_ERROR(GLFunctions::glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
                                                GL_RENDERBUFFER, depthStencil.renderbuffer));
 #endif
 }

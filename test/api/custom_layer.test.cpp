@@ -1,6 +1,6 @@
 #include <mbgl/test/util.hpp>
 
-#include <mbgl/gl/gl.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/map/map.hpp>
 #include <mbgl/util/default_thread_pool.hpp>
 #include <mbgl/storage/default_file_source.hpp>
@@ -34,7 +34,7 @@ void main() {
 // layer implementation because it is intended to reflect how someone using custom layers
 // might actually write their own implementation.
 
-class TestLayer : public mbgl::style::CustomLayerHost {
+class TestLayer : public mbgl::style::CustomLayerHost, private mbgl::gl::GLFunctions {
 public:
     void initialize() {
         program = MBGL_CHECK_ERROR(glCreateProgram());

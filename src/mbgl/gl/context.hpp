@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mbgl/gl/features.hpp>
+#include <mbgl/gl/gl_functions.hpp>
 #include <mbgl/gl/object.hpp>
 #include <mbgl/gl/state.hpp>
 #include <mbgl/gl/value.hpp>
@@ -36,7 +37,7 @@ class Debugging;
 class ProgramBinary;
 } // namespace extension
 
-class Context {
+class Context : private GLFunctions {
 public:
     Context();
     ~Context();
